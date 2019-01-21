@@ -1,0 +1,140 @@
+<br><br>
+
+
+
+<div class=container>
+    
+    <center><H1><%= current_user.name %>님의 My Page</H1></center>
+
+
+<ul class="nav nav-tabs nav-justified">
+    <li class="active">
+      <a class="nav-link active"  data-toggle="tab" href="#mypost">내가 쓴 글( <%=@posts.count%> )</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  data-toggle="tab" href="#myscrap">스크랩한 글( <%=@scraps.count%> )</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  data-toggle="tab" href="#mycom">댓글 ( <%=@comments.count%> )</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  data-toggle="tab" href="#myrecom">리댓글( <%=@recomments.count%> )</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  data-toggle="tab" href="#mypoint">포인트( <%= current_user.point %> )</a>
+    </li>
+    
+</ul>
+
+<br><br>
+
+<div class="tab-content">
+  <div class="tab-pane container active" id="mypost">
+      
+      <table class="table table-hover">
+          <thead>
+              <tr>
+                <th>제목</th>
+                <th>카테고리</th>
+                <th>투표 현황</th>
+                <th>작성시간</th>
+              </tr>
+         </thead>
+         <tbody>
+            <% @posts.each do |a|%>
+            <tr onClick="location.href='/board/detail/<%=a.id%>'">
+                <td> <%= a.title %> </td>
+                <td> <%= a.category %> </td>
+                <td> 찬: <%= a.get_upvotes.size %> 반: <%= a.get_downvotes.size %></td>
+                <td> <%= (a.created_at  + 32400 ).strftime("%Y-%m-%d %a %H:%M:%S")%> </td>
+            </tr>
+            <%end%>
+        </tbody>
+      </table>
+  </div>
+  
+  
+  <div class="tab-pane container fade" id="myscrap">
+      <H4> 스크랩한 글( <%=@scraps.count%> )</H4>
+      <table class="table table-hover">
+          <thead>
+              <tr>
+                <th>제목</th>
+                <th>글 작성자</th>
+              </tr>
+         </thead>
+         <tbody>
+        <% @scraps.each do |a|%>
+        <tr onClick="location.href='/board/detail/<%=a.post.id%>'">
+            <td><%= a.post.title %></td>
+            <td><%= a.post.user_id %></td>
+        </tr>
+        <%end%>
+        </tbody>
+      </table>
+  </div>
+  
+  
+  <div class="tab-pane container fade" id="mycom">
+      
+      <table class="table table-hover">
+          <thead>
+              <tr>
+                <th>글제목</th>
+                <th>내용</th>
+              </tr>
+         </thead>
+         <tbody>
+            <% @comments.each do |a|%>
+            <tr onClick="location.href='/board/detail/<%=a.post.id%>'">
+                <td> <%= a.post.title %> </td>
+                <td> <%= a.content %> </td>
+            </tr>
+        <%end%>
+        </tbody>
+      </table>
+  </div>
+  
+  
+  <div class="tab-pane container fade" id="myrecom">
+      
+      <table class="table table-hover">
+          <thead>
+              <tr>
+                <th>글제목</th>
+                <th>리댓글내용</th>
+              </tr>
+         </thead>
+         <tbody>
+            <% @recomments.each do |a|%>
+            <tr onClick="location.href='/board/detail/<%=a.comment.post.id%>'">
+                <td> <%= a.comment.post.title %> </td>
+                <td> <%= a.content %> </td>
+            </tr>
+        <%end%>
+        </tbody>
+      </table>
+  </div>
+  
+  <div class="tab-pane container fade" id="mypoint">
+      
+      <table class="table table-hover">
+          <thead>
+              <tr>
+                <th>글제목</th>
+                <th>받은 포인트</th>
+              </tr>
+         </thead>
+         <tbody>
+            <% @points.each do |a|%>
+            <tr onClick="location.href='/board/detail/<%=a.post_id%>'">
+                <td> <%=Post.find(a.post_id).title%> </td>
+                <td> <%=a.how_point%> </td>
+            </tr>
+        <%end%>
+        </tbody>
+      </table>
+  </div>
+  
+</div>
+</div>

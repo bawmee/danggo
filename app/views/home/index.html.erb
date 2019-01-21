@@ -1,0 +1,25 @@
+<br><br><br><br>
+
+<center>
+<div class="container">
+    
+    <div style="border:2px lightgray solid;border-radius:10px; text-align:center; width:800px;z-index:1;">
+        <br><br><br>
+        <table class="table">
+            <thead><tr><td colspan="2"><span class="glyphicon">&#xe001;</span> 어서오시게나 포인트 전당 <span class="glyphicon">&#xe001;</span></td></tr></thead>
+            <tbody>
+                <%@posts.each do|p|%>
+                    <% @writer = User.find(p.user_id) %>
+                    <% if @writer.point >= 20 %>
+                  <tr onClick="location.href='/board/detail/<%=p.id%>'">
+                    <td><font color="<%=p.color%>"><%=p.category%></font></td>
+                    <td><%=p.title%></font></td>
+                  </tr>
+                  <%end%>
+                <%end%>
+     
+            </tbody>
+          </table>
+    </div>
+</div>
+</center>

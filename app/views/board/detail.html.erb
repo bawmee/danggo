@@ -1,0 +1,225 @@
+
+<head>
+    <script>
+        function showHide(id) {
+           var obj = document.getElementById(id);
+           if (obj.style.display == 'none')
+               obj.style.display = 'block';
+           else
+               obj.style.display = 'none';
+        }
+    </script>
+    
+    <style>
+    .btn{background-color:white;}
+</style>
+    
+</head>
+
+<body>
+ <center>
+  <h1>상세내용 페이지</h1>
+  
+  <img src="/cate.png" usemap="#image-maps-2018-07-24-170037"/>
+  <map name="image-maps-2018-07-24-170037" id="ImageMapsCom-image-maps-2018-07-24-170037">
+    <area  href="/board/index" shape="rect" coords="1,6,63,30" />
+    <area  href="/board/food" shape="rect" coords="91,7,157,30" />
+    <area  href="/board/love" shape="rect" coords="190,8,256,31" />
+    <area  href="/board/fashion" shape="rect" coords="288,5,376,32" />
+  </map>
+  
+  <br>
+</center>
+
+ 
+    <div class="container">
+        <div style="float:right"> <a href='/board/new' style="color:black"><span class="glyphicon">&#x2b;</span>새 글 작성</a> </div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th width="100">Category</th>
+            <td><%=@post.category%></td>
+          </tr>
+          <tr>
+            <th>Title</th>
+            <td><%=@post.title%></td>
+          </tr>
+          <tr>
+            <th>Write</th>
+            <td><%=@post.name%> <div style="float:right;color:gray"><%=@ttl.strftime("%Y-%m-%d %a %H:%M:%S")%></div></td>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="2" align="center">
+                    <%=@post.content%> <br><br>
+                    <div margin="15px"> <a href="<%=@post.image_url%>"><img src="<%=@post.image_url%>" max-width = "500px" height="auto"/></a> </div><br>
+                    
+                    <%if @post.vote%>
+                        <div  id="container" style="border:5px #ede6de solid;padding:20px; text-align:center;display:table-cell;vertical-align:middle;align:center;" >
+                            <i class="fa fa-bar-chart"></i> <strong>투표 마감</strong> <br><br>
+                            <img src="/vic.png" width="50" height="50"/> 이겼쪙!<br>
+                            찬성 <%= @post.get_upvotes.size %>&nbsp;
+                            <% if @post.get_upvotes.size > @post.get_downvotes.size %>
+                                <span class="glyphicon">&#xe080;</span>
+                            <% else%>
+                                <span class="glyphicon">&#xe079;</span>
+                            <%end%>
+                            &nbsp; 반대 <%= @post.get_downvotes.size %>
+                        </div>
+                    <%else%>
+                        <%if Time.now < @post.updated_at + @post.time * 60%>
+                            <i class="fa fa-bar-chart"></i> <strong>투표 진행중</strong> <br><br>
+                            <div  id="container" style="border:5px #ede6de solid;padding:20px; text-align:center;display:table-cell;vertical-align:middle;align:center;" >
+                                <%if @post.user_id == current_user.id %>
+                                    찬성 <%=@post.get_upvotes.size%> 반대 <%=@post.get_downvotes.size%>
+                                <% else%>
+                                <%= link_to "찬성", like_post_path(@post.id), method: :get, style: "margin-top: 30px; padding: 10px;" %>
+                                &nbsp; <%= link_to "반대", dislike_post_path(@post.id), method: :get, style: "margin-top: 30px; padding: 10px;" %>
+                                <% end%>
+                            </div><br>
+                        <%else%>
+                            <div  id="container" style="border:5px #ede6de solid;padding:20px; text-align:center;display:table-cell;vertical-align:middle;align:center;" >
+                            <i class="fa fa-bar-chart"></i> <strong>투표 마감</strong> <br><br>
+                            <img src="/vic.png" width="50" height="50"/> 이겼쪙!<br>
+                            찬성 <%= @post.get_upvotes.size %>&nbsp;
+                            <% if @post.get_upvotes.size > @post.get_downvotes.size %>
+                                <span class="glyphicon">&#xe080;</span>
+                            <% else%>
+                                <span class="glyphicon">&#xe079;</span>
+                            <%end%>
+                            &nbsp; 반대 <%= @post.get_downvotes.size %>
+                        </div>
+                            <% @post.vote = 1 %>
+                            <% @post.save%>
+                            <% if @uv.count > @dv.count %>
+                                <% @uv.each do |x|%>
+                                    <%x.point += 3%>
+                                    <%x.save%>
+                                     <% k = Point.new%>
+                                     <% k.post_id = @post.id%>
+                                     <% k.user_id = x.id%>
+                                     <% k.how_point = 3%>
+                                     <% k.save%>
+                                <%end%>
+                            <% else %>
+                                <% @dv.each do |x|%>
+                                    <%x.point += 3%>
+                                    <%x.save%>
+                                     <% k = Point.new%>
+                                     <% k.post_id = @post.id%>
+                                     <% k.user_id = x.id%>
+                                     <% k.how_point = 3%>
+                                     <% k.save%>
+                                <%end%>
+                            <%end%>
+                        <%end%>
+                    
+                    <%end%>
+                    <br>
+                    <div style="float:right">스크랩 : <%= @post.scraps.size %> <br>
+                    <% if @post.user_id == current_user.id%>
+                        <a href="/board/delete/<%=@post.id%>">삭제</a> &nbsp; <a href="/board/edit/<%=@post.id%>">수정</a><br/>
+                    <% else %>
+                        <% if current_user.is_scrap? (@post) %>
+                             <form action='/board/<%= @post.id%>/scrap' method='post' style="width:20;float:left;">
+                               <button class="btn" id="btn" type="submit"><img class="btn-img" src="/iscrap.png" width="33" height="35"></button> 
+                             </form>
+  
+                         <% else %>
+                             <form action='/board/<%= @post.id%>/scrap' method='post' style="width:20;float:left;">
+                              <button class="btn" id="btn" type="submit"><img class="btn-img" src="/isntscrap.png" width="33" height="35"></button>
+                             </form>
+  
+                         <% end %>
+                    <% end %>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th colspan="2"> <i class="fa fa-commenting"></i> Comment "<%=@post.comments.count%>" &nbsp; <font color="gray">인터넷은 우리가 함께 만들어가는 소중한 공간입니다. </font></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <%@post.comments.each do |c|%>
+                                <tr>
+                                    <td> 
+                                        <strong><%=c.name%></strong><br>
+                                        <%=c.content%> <br>
+                                        <!--댓글 수정-->
+                                        <div id="comments_edit_html_<%=c.id%>" style="display:none; margin-top: 10px;">
+                                            <form action="/<%=@post.id%>/comment_update/<%=c.id%>" method="post">
+                                            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                                            <input type="text" class="form-control" name="comment_content" value="<%=c.content%>"/>
+                                            <button type="submit" class="btn btn-default" >완료</button> &nbsp; <button src="/board/index" class="btn btn-default">취소</button>
+                                            </form>
+                                        </div>
+                                        <br>
+                                        <!-- 리댓글& 수정 &삭제 -->
+                                        <div style="float:right;">
+                                            <a onclick="showHide('recomments_html_<%=c.id%>')" onfocus="this.blur()" style="color:red">리댓글</a> 
+                                            <% if current_user.id == c.user_id %>
+                                            &nbsp;|&nbsp;<a onclick="showHide('comments_edit_html_<%=c.id%>')" onfocus="this.blur()" style="color:red">Edit</a> 
+                                            &nbsp;|&nbsp;<a href="/<%=@post.id%>/comment_destroy/<%=c.id%>" style="color:red">Delete</a> 
+                                            <%end%>
+                                        </div>
+                                        <br>
+                                        <!--리댓글 작성-->
+                                        <div id="recomments_html_<%=c.id%>" style="display:none; margin-top: 10px;">
+                                            <form action="/<%=@post.id%>/<%=c.id%>/recomment_create" method = "get">
+                                                리댓글작성 : <input type="text" class="form-control" name="recomment_content"/>
+                                                <input type="submit" class="btn btn-default"  value="완료" style="float:right"/>
+                                            </form>
+                                        </div>
+                                        <!-- 리댓글 보여주기 -->
+                                        <table class="table">
+                                            <%c.recomments.each do |r|%>
+                                            <tr>
+                                                <td> 
+                                                    <strong> ㄴ> <%=r.name%> </strong><br>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=r.content%><br>
+                                                    <!--리댓글 수정-->
+                                                    <div id="recomments_edit_html_<%=r.id%>" style="display:none; margin-top: 10px;">
+                                                        <form action="/<%=@post.id%>/recomment_update/<%=c.id%>/<%=r.id%>" method="post">
+                                                        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                                                            <input type="text" class="form-control" name="recomment_content" value="<%=r.content%>">
+                                                            <button type="submit" class="btn btn-default">완료</button> &nbsp; <button src="/board/index" class="btn btn-default">취소</button>
+                                                        </form>
+                                                     </div>
+                                                     <!-- 리댓글의 수정&삭제 -->
+                                                     <div style="float:right;">
+                                                         <% if current_user.id == r.user_id %>
+                                                            <a onclick="showHide('recomments_edit_html_<%=r.id%>')" onfocus="this.blur()" style="color:red">Edit</a> &nbsp;|&nbsp;
+                                                            <a href="/<%=@post.id%>/recomment_destroy/<%=c.id%>/<%=r.id%>">Delete</a>
+                                                        <%end%>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <%end%>
+                                        </table>
+                                    </td>
+                                </tr>
+                            <%end%>
+                            <tr>
+                                <td> 
+                                    <!-- 댓글 작성-->
+                                    <form action ="/<%=@post.id%>/comment_create" method = "get">
+                                        <input type="textarea" class="form-control" name="comment_content" placeholder="댓글 작성" size="30"><br>
+                                        <button type="submit" class="btn btn-default"  style="float:right">완료</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+      </table>
+</div>
+
+
+</body>

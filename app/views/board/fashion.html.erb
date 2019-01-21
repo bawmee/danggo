@@ -1,0 +1,59 @@
+
+<div class="container">
+  <center>
+  <br>
+  <img src="/sock.png" width="50" height="50"/><br><br>
+  <img src="/cate.png" usemap="#image-maps-2018-07-24-170037"/>
+  <map name="image-maps-2018-07-24-170037" id="ImageMapsCom-image-maps-2018-07-24-170037">
+    <area  href="/board/index" shape="rect" coords="1,6,63,30" />
+    <area  href="/board/food" shape="rect" coords="91,7,157,30" />
+    <area  href="/board/love" shape="rect" coords="190,8,256,31" />
+    <area  href="/board/fashion" shape="rect" coords="288,5,376,32" />
+  </map>
+  
+  <br>
+  
+    
+    <div style="float:right"> <a href='/board/new' style="color:black"><span class="glyphicon">&#x2b;</span>새 글 작성</a> </div>
+</center>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>ING?</th>
+        <th>Category</th>
+        <th>Title</th>
+        <th>Writer</th>
+        <th>Status</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+         <%@fashions.each do |x|%>
+              <tr onClick="location.href='/board/detail/<%=x.id%>'">
+                <td>
+                   <%if x.vote %>
+                     <span class="glyphicon">&#xe073;</span>
+                   <%else%>
+                     <span class="glyphicon">&#xe031;</span>
+                   <%end%>
+                </td>
+                <td><font color="<%=x.color%>"> <%=x.category%> </font></td>
+                <td><%=x.title%></td>
+                <td><%=x.name%>  </td>
+                <% if x.vote  || x.user_id == current_user.id %>
+                  <td>👍 <%=x.get_upvotes.size%> &nbsp; 👎<%=x.get_downvotes.size%></td> 
+                <% else %>
+                  <td>
+                    <%= link_to "👍 ? ", like_post_path(x.id), method: :get, style: "margin-top: 30px;" %>
+                    &nbsp; <%= link_to "👎 ? ", dislike_post_path(x.id), method: :get, style: "margin-top: 30px;" %>
+                  </td>
+                <%end%>
+                <td><%= (x.created_at + 32400).strftime("%H:%M:%S %a")%></td>
+              </tr>
+         <%end%>
+    </tbody>
+  </table>
+</div>
+
+
+   

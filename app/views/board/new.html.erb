@@ -1,0 +1,67 @@
+
+<div class="container">
+
+<h1>새로운 고민을 적어보자</h1>
+
+<form action="/board/create" method="post" enctype="multipart/form-data">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+   
+   
+   <table class="table">
+      <tr>
+        <th>Category</th>
+        <td>
+          <select class="form-control" name='category'>
+                  <option value='default' selected>- 카테고리 선택 -</option>
+                  <option value='fashion'>패션</option>
+                  <option value='food'>음식</option>
+                  <option value='love'>연애</option>
+            </select>
+        </td>
+      </tr>
+      <tr>
+        <th>투표 타입</th>
+        <td>
+          <select class="form-control" name='vote_type'>
+                  <option value='default' selected>- 찬성 / 반대 -</option>
+                  <option value='updown'>up & down</option>
+            </select>
+        </td>
+      </tr>
+      <tr>
+        <th>투표 시간</th>
+        <td>
+          <select class="form-control" name='vote_time'>
+                  <option value='0.25' selected> 15Sec</option>
+                  <option value='5' >5 Min</option>
+                  <option value='10'>10 Min</option>
+                  <option value='15'>15 Min</option>
+                  <option value='20'>20 Min</option>
+            </select>
+        </td>
+      </tr>
+      <tr>
+        <th>Title</th>
+        <td>
+            <input type="text" class="form-control" id="title" name="title" >
+        </td>
+      </tr>
+      <tr>
+        <th>Content</th>
+        <td>
+          <textarea class="form-control" rows="5" id="content" name="content"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <th>Image Upload</th>
+        <td>
+          <input type="file" name="pic" accept="image/*">
+        </td>
+      </tr>
+  </table>
+  <div style="float:right">
+          <button type="submit" class="btn btn-default">작성 완료</button>
+        </div>
+</form>
+
+</div>

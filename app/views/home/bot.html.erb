@@ -1,0 +1,63 @@
+
+
+<center>
+    
+    <h1>챗봇</h1>
+    <div style="border: 2px solid black;width:500px;" id="cb">
+        <div style="background-color:#79a6c2;padding:30px;">
+            <div style="color:white;float:left;">
+                <img src="/robot.png" class="img-circle" alt="Cinque Terre"> 챗봇
+            </div>
+    <br><br><hr><br>
+    
+    
+    <div style="float:left">챗봇</div><br>
+    <div style="background-color:white; padding:10px;margin-top:5px;float:left;border-radius:8px;">
+        나는 챗봇이에오.<br>
+        영화<br>
+        뭐 먹지?<br>
+        뭐 마시지? (투썸, 빽다방)<br>
+        응아니야?<br>
+        이름이 뭐야?<br>
+    </div>
+    <br><br> <br><br> <br><br> 
+    
+    <% if @your != nil %>
+    <div style="float:right"><%=current_user.name %></div><br>
+    <div style="background-color:gold; padding:10px;margin-top:5px;float:right;border-radius:8px;">
+        <%= @your %> 
+    </div>
+    <br><br> <br><br> <br><br>
+    
+    
+    <div style="float:left">챗봇</div><br>
+    <div style="background-color:white; padding:10px;margin-top:5px;float:left;border-radius:8px;">
+        <% if @your.include? "먹지"%>
+            이거 <strong><%= @meal[0] %></strong> 먹어
+        <% elsif @your.include? "이름"%>
+            내 이름은 <strong>챗봇</strong>
+        <% elsif @your.include? "투썸"%>
+            투썸에서 <strong><%= @twosome[0]['title'] %> </strong> 마셔
+        <% elsif @your.include? "빽다방"%>
+            빽다방에서 <strong><%= @bback[0]['title'] %> </strong> 마셔
+        <% elsif @your.include? "영화"%>
+            영화는 이것을 <strong><%= @movie[0]['title'] %> </strong> 보렴
+        <% else %>
+            난  <strong> <%= @reply[0] %></strong> 이라고 말할게
+        <%end%>
+    </div>
+    <%end%>
+     <br><br> <br><br> <br><br>
+    </div>
+    
+    
+    <div  style="background-color:white;padding-top:10px;height:100px">
+        <form method="get" enctype="multipart/form-data">
+            <textarea name="talk" style="border:none;height:70px;width:400px;"></textarea>
+            <input type="submit" class="btn btn-warning" value="보내기"/>
+        </form>
+    </div>
+    
+  </div>
+
+</center>

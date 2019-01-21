@@ -1,0 +1,7 @@
+<h1> 리댓글 수정</h1>
+
+<form action="/<%=@post.id%>/recomment_update/<%=@comment.id%>/<%=@recomment.id%>" method="post">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <input type="text"  name="recomment_content" value="<%=@recomment.content%>">
+            <button type="submit">완료</button> &nbsp; <button src="/board/index">취소</button>
+        </form>

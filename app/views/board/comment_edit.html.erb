@@ -1,0 +1,6 @@
+<br>댓글 수정
+        <form action="/<%=@post.id%>/comment_update/<%=@comment.id%>" method="post">
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+            <input type="text"  name="comment_content" value="<%=@comment.content%>">
+            <button type="submit">완료</button> &nbsp; <button src="/board/index">취소</button>
+        </form>
